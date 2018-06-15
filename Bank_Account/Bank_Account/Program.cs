@@ -1,22 +1,23 @@
 ﻿using System;
+using System.Text;
 
 namespace Bank_Account
 {
     public class Program
     {
         public static decimal balance = 5000;
-        public static string receipt = $"TRANSACTION RECEIPT\n\t\t\t{balance.ToString("C2")}\n";
+        public static StringBuilder receipt = new StringBuilder($"TRANSACTION RECEIPT\n\t\t\t{GetBalance().ToString("C2")}\n");
 
         public static void Main(string[] args)
         {
             bool runFlag = true;
             while (runFlag)
             {
-                Console.Clear();
-                Menu(); //Display Menu To User
+                Menu();
                 try
                 {
-                    int choice = MenuOption(); //Get User input
+                    int choice = MenuOption();
+
                     switch (choice)
                     {
                         case 1:
@@ -38,11 +39,47 @@ namespace Bank_Account
                 {
                     Console.WriteLine("Invalid Entry");
                 }
+                finally
+                {
+                    Console.Clear();
+                }
             }
+
             PrintReceipt();
         }
 
-        //Display menu to User
+        /// <summary>
+        /// GetBalance - Retrieve Current Balanace
+        /// </summary>
+        /// <returns> decimal - current balance </returns>
+        public static decimal GetBalance()
+        {
+            return balance;
+        }
+
+        /// <summary>
+        /// AddToBalance - Increment Current Balance
+        /// </summary>
+        /// <param name="amount"> decimal - positive amount to be added to balance </param>
+        /// <returns> decimal - incremented balance </returns>
+        public static decimal AddToBalance(decimal amount)
+        {
+            return balance += amount;
+        }
+
+        /// <summary>
+        /// SubtractFromBalance - Decrement Current Balance
+        /// </summary>
+        /// <param name="amount"> decimal - positive amount to be subtraced from balance </param>
+        /// <returns> decimal - decremented balance </returns>
+        public static decimal SubtractFromBalance(decimal amount)
+        {
+            return balance -= amount;
+        }
+
+        /// <summary>
+        /// Menu - Display ATM interface to user
+        /// </summary>
         public static void Menu()
         {
             Console.WriteLine("1. View Balance");
@@ -51,7 +88,10 @@ namespace Bank_Account
             Console.WriteLine("4. Exit");
         }
         
-        //Retrive User's Menu Choice
+        /// <summary>
+        /// MenuOption - Validate user's menu option selection
+        /// </summary>
+        /// <returns> int - selected menu option </returns>
         public static int MenuOption()
         {
             try
@@ -70,15 +110,19 @@ namespace Bank_Account
             }
         }
 
-        //Display Current Account Balance to User
+        /// <summary>
+        /// ViewBalance - Display current balance to the console in an appropriate format
+        /// </summary>
         public static void ViewBalance()
         {
-            Console.WriteLine($"Current Balance:\t{balance.ToString("C2")}");
+            Console.WriteLine($"Current Balance:\t{GetBalance().ToString("C2")}");
             Console.WriteLine("Press ENTER to continue");
             Console.ReadLine();
         }
 
-        //Decrement Current Balance
+        /// <summary>
+        /// Withdraw - Retrieve user input amount, validate value, and decrement current balance
+        /// </summary>
         public static void Withdraw()
         {
             Console.Clear();
@@ -90,7 +134,7 @@ namespace Bank_Account
                     Console.WriteLine("Insufficient Funds");
                 else
                 {
-                    balance -= amount;
+                    SubtractFromBalance(amount);
                     Transaction($"-{amount.ToString("C2")}");
                 }
                 ViewBalance();
@@ -101,8 +145,9 @@ namespace Bank_Account
             }
         }
 
-
-        //Increment Current Balance
+        /// <summary>
+        /// Depost - Retrieve user input amount, validate value, and increment current balance
+        /// </summary>
         public static void Deposit()
         {
             Console.Clear();
@@ -110,7 +155,7 @@ namespace Bank_Account
             {
                 Console.Write("Depisit ");
                 decimal amount = GetAmount();
-                balance += amount;
+                AddToBalance(amount);
                 Transaction($"+{amount.ToString("C2")}");
                 ViewBalance();
             }
@@ -120,8 +165,11 @@ namespace Bank_Account
             }
 
         }
-
-        //Request amount from user
+        
+        /// <summary>
+        /// GetAmount - Retrieve validated amount from user
+        /// </summary>
+        /// <returns> decimal - validated monetary representation to be added/subtracted from current balance </returns>
         public static decimal GetAmount()
         {
             try
@@ -143,17 +191,22 @@ namespace Bank_Account
             }
         }
 
-        //Store Session Transaction History
+        /// <summary>
+        /// Transaction - Accumulate all transaction records for current ATM session
+        /// </summary>
+        /// <param name="record"> string - single transaction amount in currecny format with a leading +/- </param>
         public static void Transaction(string record)
         {
-            receipt += $"\t\t\t{record}\n";
+            receipt.Append($"\t\t\t{record}\n");
         }
 
-        //Display Transaction Histroy
+        /// <summary>
+        /// PrintReceipt - Display all session transactions to user via console
+        /// </summary>
         public static void PrintReceipt()
         {
             Console.Clear();
-            Console.WriteLine(receipt);
+            Console.WriteLine(receipt.ToString());
             ViewBalance();
         }
     }
