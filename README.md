@@ -1,8 +1,8 @@
-# Error Handling and Testing
+# Automatic Teller Machine
 
 ## Context
 
-This Lab is an exercise in utilizing Unit testing, documentation, try/catch, and programming fundamentals in C#.
+This repo is an exercise in utilizing Unit testing, documentation, try/catch, and programming fundamentals in C#.
 The user is able to interact with a virtual "ATM" via console line interface.
 
 ## Visuals
